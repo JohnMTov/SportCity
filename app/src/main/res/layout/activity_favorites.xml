@@ -71,6 +71,7 @@
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/profile"
             app:srcCompat="@drawable/ic_profile"
+            android:onClick="showHint"
             tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

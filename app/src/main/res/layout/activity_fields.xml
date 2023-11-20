@@ -45,6 +45,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
+            android:onClick="showHint"
             android:contentDescription="@string/description"
             app:srcCompat="@drawable/ic_filter" />
     </LinearLayout>
@@ -100,6 +101,7 @@
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/profile"
             app:srcCompat="@drawable/ic_profile"
+            android:onClick="showHint"
             tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 

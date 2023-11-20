@@ -75,6 +75,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 intent.putExtra("fieldCost", field.getCost());
                 intent.putExtra("fieldId", field.getId());
                 intent.putExtra("fieldFav", field.getFavStatus());
+                intent.putExtra("fieldLatitude", field.getLatitude());
+                intent.putExtra("fieldLongitude", field.getLongitude());
                 context.startActivity(intent);
             }
         });

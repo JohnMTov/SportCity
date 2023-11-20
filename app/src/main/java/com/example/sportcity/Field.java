@@ -11,8 +11,11 @@ public class Field {
     private int sportId;
     private int favStatus;
     private String img;
+    private double latitude;
+    private double longitude;
 
-    public Field(int id, String title, String address, String openingHours, String phone, String type, String cost, int sportId, int favStatus, String img) {
+    public Field(int id, String title, String address, String openingHours, String phone, String type,
+                 String cost, int sportId, int favStatus, String img, double latitude, double longitude) {
         this.id = id;
         this.title = title;
         this.address = address;
@@ -23,6 +26,24 @@ public class Field {
         this.sportId = sportId;
         this.favStatus = favStatus;
         this.img = img;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public int getId() {

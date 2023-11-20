@@ -43,13 +43,15 @@ public class DatabaseAdapter {
         String[] columns = new String[] {DatabaseHelper.TABLE2_COLUMN1, DatabaseHelper.TABLE2_COLUMN2,
                 DatabaseHelper.TABLE2_COLUMN3, DatabaseHelper.TABLE2_COLUMN4, DatabaseHelper.TABLE2_COLUMN5,
                 DatabaseHelper.TABLE2_COLUMN6, DatabaseHelper.TABLE2_COLUMN7, DatabaseHelper.TABLE2_COLUMN8,
-                DatabaseHelper.TABLE2_COLUMN9, DatabaseHelper.TABLE2_COLUMN10};
+                DatabaseHelper.TABLE2_COLUMN9, DatabaseHelper.TABLE2_COLUMN10, DatabaseHelper.TABLE2_COLUMN11,
+                DatabaseHelper.TABLE2_COLUMN12};
         Cursor cursor = database.query(DatabaseHelper.TABLE2, columns, null,
                 null, null, null, null);
         while (cursor.moveToNext()){
             fields.add(new Field(cursor.getInt(0), cursor.getString(1), cursor.getString(2),
                     cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9)));
+                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getDouble(10),
+                    cursor.getDouble(11)));
         }
         cursor.close();
         return fields;

@@ -9,15 +9,45 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.MapObjectTapListener;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.image.ImageProvider;
+
+import java.util.Objects;
 
 public class DetailActivity extends AppCompatActivity {
 
-    CheckBox likeButton;
+    private CheckBox likeButton;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        MapKitFactory.initialize(this);
+        mapView = findViewById(R.id.mapview);
+
+        double latitude = getIntent().getDoubleExtra("fieldLatitude", 0);
+        double longitude = getIntent().getDoubleExtra("fieldLongitude", 0);
+        Point point = new Point(latitude, longitude);
+        ImageProvider imageProvider = ImageProvider.fromResource(this, R.drawable.marker);
+
+        mapView.getMap().move(
+                new CameraPosition(point, 17.0f, 0.0f, 0.0f),
+                new Animation(Animation.Type.SMOOTH, 0),
+                null);
+
+        PlacemarkMapObject placemark = mapView.getMap().getMapObjects().addPlacemark(point, imageProvider);
+        placemark.setUserData(getIntent().getStringExtra("fieldTitle"));
+        placemark.addTapListener(mapObjectTapListener);
 
         ImageView fieldImage = findViewById(R.id.fieldImageDetail);
         TextView fieldTitle = findViewById(R.id.fieldTitleDetail);
@@ -42,8 +72,6 @@ public class DetailActivity extends AppCompatActivity {
         fieldPhone.setText(getIntent().getStringExtra("fieldPhone"));
         fieldType.setText(getIntent().getStringExtra("fieldType"));
         fieldCost.setText(getIntent().getStringExtra("fieldCost"));
-
-
     }
 
     public void addToFavorites(View view) {
@@ -62,7 +90,30 @@ public class DetailActivity extends AppCompatActivity {
         databaseAdapter.close();
     }
 
+    private final MapObjectTapListener mapObjectTapListener = (mapObject, point) -> {
+        Toast toast = Toast.makeText(
+                getApplicationContext(),
+                Objects.requireNonNull(mapObject.getUserData()).toString(),
+                Toast.LENGTH_SHORT);
+        toast.show();
+        return true;
+    };
+
     public void goBack(View view) {
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        mapView.onStop();
+        MapKitFactory.getInstance().onStop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapKitFactory.getInstance().onStart();
+        mapView.onStart();
     }
 }

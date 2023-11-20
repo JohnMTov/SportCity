@@ -69,8 +69,8 @@
         app:layout_constraintTop_toBottomOf="@+id/fieldImageDetail">
 
         <TextView
-            style="@style/TextViewPrimary"
             android:id="@+id/fieldTitleDetail"
+            style="@style/TextViewPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -80,8 +80,8 @@
             android:textStyle="bold" />
 
         <TextView
-            style="@style/TextViewPrimary"
             android:id="@+id/fieldAddressDetail"
+            style="@style/TextViewPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -131,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autoLink="phone"
                 android:text="8 (391) 244-86-25" />
         </LinearLayout>
 
@@ -179,8 +180,8 @@
                 android:text="Стоимость: " />
 
             <TextView
-                style="@style/TextViewPrimary"
                 android:id="@+id/fieldCostDetail"
+                style="@style/TextViewPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Вход свободный" />
@@ -188,14 +189,13 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapview"
+        android:layout_width="328dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:srcCompat="@drawable/map" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
