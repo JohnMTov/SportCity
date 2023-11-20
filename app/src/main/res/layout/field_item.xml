@@ -36,8 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/swimming_2" />
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout

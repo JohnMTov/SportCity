@@ -1,59 +1,36 @@
 package com.example.sportcity;
 
 public class Field {
-    private static int count = 0;
     private int id;
-    private int img;
     private String title;
     private String address;
     private String openingHours;
     private String phone;
     private String type;
     private String cost;
-    private int kindOfSport;
-    boolean isFavorite;
+    private int sportId;
+    private int favStatus;
+    private String img;
 
-    public Field(int img, String title, String address, String openingHours, String phone, String type, String cost, int kindOfSport) {
-        this.img = img;
+    public Field(int id, String title, String address, String openingHours, String phone, String type, String cost, int sportId, int favStatus, String img) {
+        this.id = id;
         this.title = title;
         this.address = address;
         this.openingHours = openingHours;
         this.phone = phone;
         this.type = type;
         this.cost = cost;
-        this.kindOfSport = kindOfSport;
-        this.isFavorite = false;
-        this.id = ++count;
+        this.sportId = sportId;
+        this.favStatus = favStatus;
+        this.img = img;
     }
-
-
 
     public int getId() {
         return id;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
-    public int getKindOfSport() {
-        return kindOfSport;
-    }
-
-    public void setKindOfSport(int kindOfSport) {
-        this.kindOfSport = kindOfSport;
-    }
-
-    public int getImg() {
-        return img;
-    }
-
-    public void setImg(int img) {
-        this.img = img;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -103,4 +80,29 @@ public class Field {
     public void setCost(String cost) {
         this.cost = cost;
     }
+
+    public int getSportId() {
+        return sportId;
+    }
+
+    public void setSportId(int sportId) {
+        this.sportId = sportId;
+    }
+
+    public int getFavStatus() {
+        return favStatus;
+    }
+
+    public void setFavStatus(int favStatus) {
+        this.favStatus = favStatus;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
 }

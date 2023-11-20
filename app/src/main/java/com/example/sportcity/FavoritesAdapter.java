@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +18,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder> {
 
@@ -38,7 +43,16 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
     @Override
     public void onBindViewHolder(@NonNull FavoritesViewHolder holder, int position) {
         Field field = favFields.get(position);
-        holder.favImage.setImageResource(field.getImg());
+        Bitmap bitmap;
+        AssetManager assetManager = context.getAssets();
+        try {
+            InputStream istr = assetManager.open(field.getImg());
+            bitmap = BitmapFactory.decodeStream(istr);
+            holder.favImage.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         holder.favTitle.setText(field.getTitle());
         holder.favAddress.setText(field.getAddress());
         holder.favOpeningHours.setText(field.getOpeningHours());
@@ -48,7 +62,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailActivity.class);
 
-                intent.putExtra("fieldImage", field.getImg());
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                intent.putExtra("fieldImage", byteArray);
                 intent.putExtra("fieldTitle", field.getTitle());
                 intent.putExtra("fieldAddress", field.getAddress());
                 intent.putExtra("fieldOpeningHours", field.getOpeningHours());
@@ -56,7 +74,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 intent.putExtra("fieldType", field.getType());
                 intent.putExtra("fieldCost", field.getCost());
                 intent.putExtra("fieldId", field.getId());
-                intent.putExtra("fieldFav", field.isFavorite());
+                intent.putExtra("fieldFav", field.getFavStatus());
                 context.startActivity(intent);
             }
         });
@@ -76,15 +94,17 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Objects.requireNonNull(FieldsActivity.fields.stream().filter(f -> (f.getId()) == field.getId())
-                                .findFirst().orElse(null)).setFavorite(false);
-                        Favorites.fieldIds.remove(Favorites.fieldIds.stream().filter(id -> (id == field.getId()))
-                                .findFirst().orElse(null));
+
+                        DatabaseAdapter databaseAdapter = new DatabaseAdapter(context);
+                        databaseAdapter.open();
+
+                        databaseAdapter.changeFavStatus(field.getId(), 0);
+                        databaseAdapter.deleteFromFavorites(field.getId());
 
                         Intent intent = new Intent(context, FavoritesActivity.class);
                         context.startActivity(intent);
                         ((FavoritesActivity) context).finish();
-
+                        databaseAdapter.open();
                     }
                 });
                 alert.create().show();

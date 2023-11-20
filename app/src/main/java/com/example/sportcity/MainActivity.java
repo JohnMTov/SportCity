@@ -8,30 +8,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final List<Sport> sports = new ArrayList<>();
+    RecyclerView sportRecycler;
+    SportAdapter sportAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sports.add(new Sport(1, R.drawable.football, "Футбол"));
-        sports.add(new Sport(2, R.drawable.workout, "Воркаут"));
-        sports.add(new Sport(3, R.drawable.basketball, "Баскетбол"));
-        sports.add(new Sport(4, R.drawable.hockey, "Хоккей"));
-        sports.add(new Sport(5, R.drawable.skiing, "Лыжи"));
-        sports.add(new Sport(6, R.drawable.swimming, "Плавание"));
-
-        RecyclerView sportRecycler = findViewById(R.id.sportRecycler);
+        sportRecycler = findViewById(R.id.sportRecycler);
         sportRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        SportAdapter sportAdapter = new SportAdapter(this, sports);
 
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter(this);
+        databaseAdapter.open();
+
+        List<Sport> sports = databaseAdapter.getSports();
+
+        sportAdapter = new SportAdapter(this, sports);
         sportRecycler.setAdapter(sportAdapter);
+
+        databaseAdapter.close();
     }
 
     public void goToFavorites(View view) {

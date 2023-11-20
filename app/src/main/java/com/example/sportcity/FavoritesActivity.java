@@ -14,19 +14,25 @@ import java.util.List;
 
 public class FavoritesActivity extends AppCompatActivity {
 
-    private final List<Field> favFields = new ArrayList<>();
-
+    RecyclerView favRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        RecyclerView favRecycler = findViewById(R.id.favRecycler);
+        favRecycler = findViewById(R.id.favRecycler);
         TextView favStatus = findViewById(R.id.favStatus);
 
-        for (Field field: FieldsActivity.fields) {
-            if (Favorites.fieldIds.contains(field.getId())) {
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter(this);
+        databaseAdapter.open();
+
+        List<Field> fields = databaseAdapter.getFields();
+        List<Integer> favIds = databaseAdapter.getFavIds();
+        List<Field> favFields = new ArrayList<>();
+
+        for (Field field: fields) {
+            if (favIds.contains(field.getId())) {
                 favFields.add(field);
             }
         }
@@ -42,6 +48,8 @@ public class FavoritesActivity extends AppCompatActivity {
 
         Log.v("FavoritesActivity", "onCreate");
         getIntent().setAction("Already created");
+
+        databaseAdapter.close();
     }
 
     @Override
@@ -49,13 +57,12 @@ public class FavoritesActivity extends AppCompatActivity {
         Log.v("FavoritesActivity", "onResume");
 
         String action = getIntent().getAction();
-        if(action == null || !action.equals("Already created")) {
+        if (action == null || !action.equals("Already created")) {
             Log.v("FavoritesActivity", "Force restart");
             Intent intent = new Intent(this, FavoritesActivity.class);
             startActivity(intent);
             finish();
-        }
-        else
+        } else
             getIntent().setAction(null);
 
         super.onResume();

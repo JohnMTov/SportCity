@@ -2,6 +2,9 @@ package com.example.sportcity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHolder> {
@@ -34,7 +40,17 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
     @Override
     public void onBindViewHolder(@NonNull FieldViewHolder holder, int position) {
         Field field = fields.get(position);
-        holder.fieldImage.setImageResource(field.getImg());
+        Bitmap bitmap;
+
+        AssetManager assetManager = context.getAssets();
+        try {
+            InputStream istr = assetManager.open(field.getImg());
+            bitmap = BitmapFactory.decodeStream(istr);
+            holder.fieldImage.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         holder.fieldTitle.setText(field.getTitle());
         holder.fieldAddress.setText(field.getAddress());
         holder.fieldOpeningHours.setText(field.getOpeningHours());
@@ -44,7 +60,11 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailActivity.class);
 
-                intent.putExtra("fieldImage", field.getImg());
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                intent.putExtra("fieldImage", byteArray);
                 intent.putExtra("fieldTitle", field.getTitle());
                 intent.putExtra("fieldAddress", field.getAddress());
                 intent.putExtra("fieldOpeningHours", field.getOpeningHours());
@@ -52,7 +72,7 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
                 intent.putExtra("fieldType", field.getType());
                 intent.putExtra("fieldCost", field.getCost());
                 intent.putExtra("fieldId", field.getId());
-                intent.putExtra("fieldFav", field.isFavorite());
+                intent.putExtra("fieldFav", field.getFavStatus());
                 context.startActivity(intent);
             }
         });

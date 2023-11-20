@@ -2,13 +2,13 @@ package com.example.sportcity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Objects;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -28,11 +28,14 @@ public class DetailActivity extends AppCompatActivity {
         TextView fieldCost = findViewById(R.id.fieldCostDetail);
         likeButton = findViewById(R.id.likeButton);
 
-        if (getIntent().getBooleanExtra("fieldFav", false)) {
+        if (getIntent().getIntExtra("fieldFav", 0) == 1) {
             likeButton.setChecked(true);
         }
 
-        fieldImage.setImageResource(getIntent().getIntExtra("fieldImage", 0));
+        byte[] byteArray = getIntent().getByteArrayExtra("fieldImage");
+        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+
+        fieldImage.setImageBitmap(bitmap);
         fieldTitle.setText(getIntent().getStringExtra("fieldTitle"));
         fieldAddress.setText(getIntent().getStringExtra("fieldAddress"));
         fieldOpeningHours.setText(getIntent().getStringExtra("fieldOpeningHours"));
@@ -40,20 +43,23 @@ public class DetailActivity extends AppCompatActivity {
         fieldType.setText(getIntent().getStringExtra("fieldType"));
         fieldCost.setText(getIntent().getStringExtra("fieldCost"));
 
+
     }
 
     public void addToFavorites(View view) {
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter(this);
+        databaseAdapter.open();
+
         int fieldId = getIntent().getIntExtra("fieldId", 0);
         if (likeButton.isChecked()) {
-            Favorites.fieldIds.add(fieldId);
-            Objects.requireNonNull(FieldsActivity.fields.stream().filter(field -> (field.getId()) == fieldId)
-                    .findFirst().orElse(null)).setFavorite(true);
+            databaseAdapter.addToFavorites(fieldId);
+            databaseAdapter.changeFavStatus(fieldId, 1);
         } else {
-            Objects.requireNonNull(FieldsActivity.fields.stream().filter(field -> (field.getId()) == fieldId)
-                    .findFirst().orElse(null)).setFavorite(false);
-            Favorites.fieldIds.remove(Favorites.fieldIds.stream().filter(id -> (id == fieldId))
-                    .findFirst().orElse(null));
+            databaseAdapter.changeFavStatus(fieldId, 0);
+            databaseAdapter.deleteFromFavorites(fieldId);
         }
+
+        databaseAdapter.close();
     }
 
     public void goBack(View view) {

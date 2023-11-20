@@ -9,11 +9,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="156dp"
         android:layout_height="148dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="6dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="3dp"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/sportImage"
@@ -21,9 +21,8 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:contentDescription="@string/description"
-            app:srcCompat="@drawable/skiing"
-            tools:ignore="MissingConstraints"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            tools:ignore="MissingConstraints" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

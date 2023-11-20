@@ -2,6 +2,9 @@ package com.example.sportcity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class SportAdapter extends RecyclerView.Adapter<SportAdapter.SportViewHolder>{
@@ -32,7 +37,14 @@ public class SportAdapter extends RecyclerView.Adapter<SportAdapter.SportViewHol
     public void onBindViewHolder(@NonNull SportViewHolder holder, int position) {
         Sport sport = sports.get(position);
 
-        holder.sportImage.setImageResource(sport.getImg());
+        AssetManager assetManager = context.getAssets();
+        try {
+            InputStream istr = assetManager.open(sport.getImg());
+            Bitmap bitmap = BitmapFactory.decodeStream(istr);
+            holder.sportImage.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         holder.sportImage.setOnClickListener(new View.OnClickListener() {
             @Override

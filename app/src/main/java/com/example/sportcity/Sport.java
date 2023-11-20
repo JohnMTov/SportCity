@@ -2,20 +2,21 @@ package com.example.sportcity;
 
 public class Sport {
     private int id;
-    private int img;
     private String title;
 
-    public Sport(int id, int img, String title) {
+    private String img;
+
+    public Sport(int id, String title, String img) {
         this.id = id;
-        this.img = img;
         this.title = title;
+        this.img = img;
     }
 
-    public int getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 
